@@ -1,0 +1,11 @@
+You run the life effect like any of the usual ckb effects:  ./bin/ckb life cyan blue
+You can choose the live and dead cell colours as with ckb.
+
+The first problem is that it has to be run as root to read your keystrokes. 
+Another way is to (as root) give read permissions to the keyboard input file to everyone, then it works fine.
+The second problem is that your input file may not be "/dev/input/event2" as with my pc but some other file like "/dev/input/eventx", or something third if youre on mac.
+You will most probably have to edit the dev variable in the reader() function from "/dev/input/event2" to your file path, and then it will work.
+
+The effect is still beta so the technical crap has to be. If it gets integrated into the official ckb then it will work out of the box. 
+
+Questions and requests: http://forum.corsair.com/forums/showthread.php?p=741579#post741579
