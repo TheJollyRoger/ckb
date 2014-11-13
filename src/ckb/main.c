@@ -273,9 +273,9 @@ void mainloop_life(float fr, float fg, float fb, float br, float bg, float bb){
 				}
         		}
 		//pick itteration speeds
-		rspeed = (fr - br) / 30.f;
-        	gspeed = (fg - bg) / 30.f;
-        	bspeed = (fb - bb) / 30.f;
+		rspeed = (fr - br) / 20.f;
+        	gspeed = (fg - bg) / 20.f;
+        	bspeed = (fb - bb) / 20.f;
         	firstrun = 0;
     		}
 
@@ -292,7 +292,7 @@ void mainloop_life(float fr, float fg, float fb, float br, float bg, float bb){
 			}
 			
 	//on other frames, itterate colors
-	if (frame > 90) for(int i = 0; i < N_KEYS; i++){
+	if (frame > 50) for(int i = 0; i < N_KEYS; i++){
 			if ((og[i] == 1) && (ng[i] == 0)) {
 							r[i] -= rspeed;
 							g[i] -= gspeed;
@@ -320,7 +320,7 @@ void mainloop_life(float fr, float fg, float fb, float br, float bg, float bb){
 	if (pressed > 0) { 
 		ng[pressed] = 1;
 		og[pressed] = 1;
-		if (frame < 90) {  
+		if (frame != 0) {  
 			r[pressed] = rn;
 			g[pressed] = gn;
 			b[pressed] = bn;
@@ -340,7 +340,7 @@ void mainloop_life(float fr, float fg, float fb, float br, float bg, float bb){
 	// Update and output the keys
 	fprintf(output, "rgb ");
 	for(int i = 0; i < N_KEYS; i++) if ( sus[i].name != NULL ) fprintf(output, " %s:%02x%02x%02x", sus[i].name, (int)(r[i]), (int)(g[i]), (int)(b[i])); 
-	frame = (frame + 1) % 120;
+	frame = (frame + 1) % 70;
 	fputc('\n', output);
 	fflush(output);
 }
@@ -382,7 +382,7 @@ void mainloop_random(float fr, float fg, float fb, float br, float bg, float bb)
     }
     fputc('\n', output);
     fflush(output);
-    frame = (frame + 1) % 120;
+    frame = (frame + 1) % 60;
 }
 
 
