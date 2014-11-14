@@ -61,10 +61,6 @@ static const char *const evval[3] = {
     "REPEATED"
 };
 
-struct input_event ev;
-ssize_t n;
-int fd;
-
 /** A matrix representing neghbouring keys. The first number of a set is the key number, second is the number of neighbours and after that come 1-10 neighbouring key numbers. **/
 typedef struct { 
 	const char* name;
@@ -222,18 +218,33 @@ neighbour sus[] = {
 int reader() {
 	static int firstrun = 1;
 	int i;
+	char c[30], d[2];
+	static int fd;
+	struct input_event ev;
+	ssize_t n;
+	if (firstrun == -1) return -1;
 	if (firstrun) {					//open the keyboard input file for reading
-		const char *dev = "/dev/input/event2";
-		fd = open(dev, O_RDONLY);
-		if (fd == -1) {
-			fprintf(stderr, "Cannot open %s: %s. Please give everyone read permissions on it. \n", dev, strerror(errno));
-			return EXIT_FAILURE;
+		printf("Scanning for keyboard input dir, press some random key repeatedly please. \n");
+		for (i=0; i<10; i++) {			// checks if files /dev/input/event0-10 are the keyboard
+			close(fd);			// input file, and if they are starts to read from them
+			sprintf(c, "/dev/input/event%d", i);
+ 			// debug printf("\n%s\n", c);
+			fd = open(c, O_RDONLY);
+			int flags = fcntl(fd, F_GETFL, 0);	//instruct the read function not to wait
+			fcntl(fd, F_SETFL, flags | O_NONBLOCK);	//for input, just to read
+			if (fd == -1) { printf("Cannot open %s. Please run the program as root or give everyone read permissions on it. \n", c); } else {
+				usleep(1116667);
+				n = read(fd, &ev, sizeof ev);
+				if (ev.type == EV_KEY) break; 
+				};
 			};
+		if (i == 10) { firstrun = -1; return -1; };
 		firstrun = 0;
+		printf("\n%s is the keyboard input directory. \nLife has Begun. \n", c);
 		};
-	    
-	int flags = fcntl(fd, F_GETFL, 0);		//instruct the read function not to wait
-	fcntl(fd, F_SETFL, flags | O_NONBLOCK);    	//for input, just to read
+
+	int flags = fcntl(fd, F_GETFL, 0);		
+	fcntl(fd, F_SETFL, flags | O_NONBLOCK);    	
 	n = read(fd, &ev, sizeof ev);
 
 	// if the event type is a key and if value is pressed, find the key number and return it
@@ -241,8 +252,7 @@ int reader() {
 			// debug printf("%s %i (%d)\n", evval[ev.value], (int)ev.code, (int)ev.code); 
 			for (i=0; i<N_KEYS; i++) if ( ev.code == sus[i].code ) break;
 			return i;
-		} else
-			return -1;  
+		} else	return -1;  
 }
 	
 	
@@ -259,7 +269,7 @@ void mainloop_life(float fr, float fg, float fb, float br, float bg, float bb){
 	if(firstrun) for(int i = 0; i < N_KEYS; i++) og[i] = ng[i] = rand() % 2;
 
     	// On first run, fill colors for first generation
-    	if(firstrun){  printf("\n Life has Begun. \n");
+    	if(firstrun){ 
         	srand(time(NULL));
         	for(int i = 0; i < N_KEYS; i++){
 			if (og[i]) {
