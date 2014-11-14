@@ -290,15 +290,15 @@ void mainloop_life(float fr, float fg, float fb, float br, float bg, float bb){
     		}
 
 	//on frame 0 generate a new generation, store it in ng[] nad set itteration speeds
-	if (frame == 0) for(int i = 0; i < N_KEYS; i++) og[i] = ng[i];
-	if (frame == 0) for(int i = 0; i < N_KEYS; i++){
+	if (frame == 50) for(int i = 0; i < N_KEYS; i++) og[i] = ng[i];
+	if (frame == 50) for(int i = 0; i < N_KEYS; i++){
 			count=0;	//live neighbours count
 			if ( sus[i].name == NULL ) continue;
 			for (int j = 0; j < sus[i].n[0]; j++) if (og[ sus[i].n[1 + j] ]) count++;
-			if (count < 2) ng[i] = 0;
-			if (count > 3) ng[i] = 0;
-			if (( og[i] == 1 ) && (count == 2)) ng[i] = 1;
-			if (count == 3)  ng[i] = 1;
+			if (og[i] == 1 && count < 2) 	ng[i] = 0;
+			if (og[i] == 1 && (count == 3 || count == 2 ))  ng[i] = 1;
+			if (og[i] == 1 && count > 3) 	ng[i] = 0;
+			if (og[i] == 0 && count == 3) 	ng[i] = 1;
 			}
 			
 	//on other frames, itterate colors
@@ -334,15 +334,6 @@ void mainloop_life(float fr, float fg, float fb, float br, float bg, float bb){
 			r[pressed] = rn;
 			g[pressed] = gn;
 			b[pressed] = bn;
-			for (int i = 1; i <= sus[pressed].n[0]; i++) {
-				k = sus[pressed].n[i];
-				count=0;
-				for (int j = 0; j < sus[k].n[0]; j++) if (og[ sus[k].n[1 + j] ]) count++;
-				if (count < 2) ng[k] = 0;
-				if (count > 3) ng[k] = 0;
-				if (( og[k] == 1 ) && (count == 2)) ng[k] = 1;
-				if (count == 3)  ng[k] = 1; 
-				};
 			};
 				  
 		};
