@@ -1,10 +1,9 @@
 You run the life effect like any of the usual ckb effects:  ./bin/ckb life cyan blue
 You can choose the live and dead cell colours as with ckb.
+The effect is still beta, so when the program runs (as instructed) press and release some random key until the effect starts so the program can find your keybard input file.
 
-The first problem is that it has to be run as root to read your keystrokes. 
-Another way is to (as root) give read permissions to the keyboard input file to everyone, then it works fine.
-The second problem is that your input file may not be "/dev/input/event2" as with my pc but some other file like "/dev/input/eventx", or something third if youre on mac.
-You will most probably have to edit the dev variable in the reader() function from "/dev/input/event2" to your file path, and then it will work.
+For the program to run correctly you will have to run it as root, otherwise it will not read your keypresses and wont update properly.
+Another way to run it correctly is to give read permissions to everyone for files /dev/input/event0-9, tough this will last only until reboot.
 
 The effect is still beta so the technical crap has to be. If it gets integrated into the official ckb then it will work out of the box. 
 
